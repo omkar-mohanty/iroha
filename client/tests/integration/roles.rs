@@ -141,3 +141,21 @@ fn register_metadata_role() -> Result<()> {
     test_client.submit(register_role)?;
     Ok(())
 }
+
+#[test]
+fn emit_role_revoked()-> Result<()> {
+    let(_rt, _peer, test_client) = <TestPeer>::start_test_with_runtime();
+    wait_for_genesis_committed(&vec![test_client.clone()],0);
+
+    let alice_id = <Account as Identifiable>::Id::from_str("alice@wonderland")?;
+    let register_alice = RegisterBox::new(Account::new(alice_id.clone(), []));
+    test_client.submit_blocking(register_alice)?;
+
+    let role_id = "TEST_ROLE".parse().expect("Valid");
+    let token = PermissionToken::new("token".parse().expect("Valid"));
+    let role = NewRole::new(role_id).add_permission(token).build();
+    test_client.submit(RegisterBox::new(role.clone()))?;
+
+    GrantBox::new(role,alice_id);
+    Ok(())
+}
