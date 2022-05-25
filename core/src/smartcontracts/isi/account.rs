@@ -173,7 +173,7 @@ pub mod isi {
                     return Err(ValidationError::new("Permission not found").into());
                 }
 
-                Ok(AccountEvent::PermissionRemoved(account_id.clone()))
+                Ok(AccountEvent::RoleRevoked(account_id.clone()))
             })
         }
     }
