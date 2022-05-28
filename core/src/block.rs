@@ -730,7 +730,7 @@ impl VersionedCommittedBlock {
             transactions,
             event_recommendations,
             ..
-        } = self.into_v1();
+        } = self.clone().into_v1();
 
         let BlockHeader {
             timestamp,
@@ -749,6 +749,7 @@ impl VersionedCommittedBlock {
             transactions_hash,
             rejected_transactions_hash,
             invalidated_blocks_hashes: invalidated_blocks_hashes.into_iter().map(|h| *h).collect(),
+            current_block_hash: Hash::from(self.hash()),
         };
 
         BlockValue {
